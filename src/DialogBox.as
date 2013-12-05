@@ -13,6 +13,8 @@ package
 	 */
 	public class DialogBox extends Window
 	{
+		private static var _dialogBox:DialogBox;
+		
 		public static const optionsPerPage:int = 6;
 		public static var optionLength:int, optionHeight:int;
 		private var _page:int;
@@ -22,17 +24,14 @@ package
 		private var _diagnosisOptions:Vector.<DialogOption>;
 		private var _interviewOptions:Vector.<DialogOption>;
 		
-		
 		private var _options:Vector.<DialogOption>;
 		
 		private var _displayedOptions:Vector.<DisplayedOption>;
 		private var _displayedFrom:int;
 		private var _displayedTo:int;
 		
-		
 		private var _moreOption:DialogOption;
 		private var _lessOption:DialogOption;
-	
 		
 		public function DialogBox(width:int, height:int, x:int = 0, y:int = 0) 
 		{
@@ -40,22 +39,18 @@ package
 			optionLength = this.width * 0.95;
 			optionHeight = this.height / optionsPerPage;
 			background.color = 0xffffff;
-			//trace(super.height, this.height);
 			
 			initDefaultOptions();
 			initExaminationOptions();
 			initDiagnosis();
 			initInterview();
-			
-			
-			
+						
 			_displayedOptions = new Vector.<DisplayedOption>(optionsPerPage, true);
 			for (var i:int = 0; i < optionsPerPage; ++i)
 			{
 				_displayedOptions[i] = new DisplayedOption(optionLength, optionHeight); 
 				addChild(_displayedOptions[i]);
 			}
-			
 			
 			_moreOption = new DialogOption("Następne", showMore);
 			_lessOption = new DialogOption("Poprzednie", showLess);
@@ -104,6 +99,13 @@ package
 			addOption("Czy odczuwa Pan ból przy oddawaniu moczu?", showIfPatientHurtsPisssing, _interviewOptions);
 			displayStartingOptions();
 		}
+		private function showCauseOfVisit():void 
+		{
+			trace(Patient.currentPatient.ailment.cause);
+			//if(
+			
+		}
+		
 		
 		private function showIfPatientHurtsPisssing(...args):void 
 		{
@@ -132,6 +134,7 @@ package
 			trace("Tak, rano ból był tutaj (pacjent wskazuje na nadbrzusze), a potem przemieścił się.");
 		}
 		
+		
 		private function showPainLocation(...args):void 
 		{
 			trace("O tutaj. (pacjent pokazuje na prawą strone brzucha na dole, tzw. prawy dól biodrowy");
@@ -141,6 +144,8 @@ package
 		{
 			trace("Wykonano badanie: " + examination);
 		}
+		
+		
 		
 		
 		
@@ -185,7 +190,6 @@ package
 				return;
 			}
 			list.push(new DialogOption(text, onClick, args));
-				
 		}
 		
 		public function displayOptions(from:int):void 
@@ -296,6 +300,40 @@ package
 		{
 			displayOptions(_displayedFrom - optionsPerPage);
 		}
+		public static function get dialogBox():DialogBox 
+		{
+			return _dialogBox;
+		}
+		public static function set dialogBox(val:DialogBox):void 
+		{
+			if (_dialogBox)
+			{
+				_dialogBox.clear();
+			}
+			_dialogBox = val;
+		}
+		
+		/*private var _defaultOptions:Vector.<DialogOption>;
+		private var _examinationOptions:Vector.<DialogOption>;
+		private var _diagnosisOptions:Vector.<DialogOption>;
+		private var _interviewOptions:Vector.<DialogOption>;*/
+		
+		public function get interview():Vector.<DialogOption> 
+		{
+			return _interviewOptions;
+		}
+		
+		override public function clear():void 
+		{
+			trace("Clearing dialogbox");
+			_dialogBox = null;
+			for each (var displayed:DisplayedOption in _displayedOptions) 
+			{
+				removeChild(displayed);
+				displayed.clear();
+			}
+			super.clear();
+		}
 	}
 }
 import starling.display.Sprite;
@@ -331,10 +369,7 @@ class DisplayedOption extends Sprite
 				if(touch)
 					if (touch.phase == TouchPhase.ENDED)
 					{
-						//if (!_currentOption.args)
-							//_currentOption.onClick();
-						//else 
-							_currentOption.onClick.apply(this, _currentOption.args);
+						_currentOption.onClick.apply(this, _currentOption.args);
 					}
 			}
 	}
@@ -353,6 +388,13 @@ class DisplayedOption extends Sprite
 			_textField.useHandCursor = false;
 
 		}
-		
+	}
+	
+	public function clear():void 
+	{
+		removeEventListeners();
+		removeChild(_textField);
+		_textField.dispose();
+		_textField = null;
 	}
 }

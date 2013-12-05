@@ -34,6 +34,20 @@ package
 			displayedObjects.push(object);
 		}
 		
+		public function clear():void 
+		{
+			removeChild(background);
+			background.dispose();
+			background = null;
+			
+			for each (var object:DisplayObject in displayedObjects) 
+			{
+				removeChild(object);
+				object.dispose();
+				object = null;
+			}
+		}
+		
 	}
 
 }

@@ -89,5 +89,7 @@
     <option testMovieCommand="Run.bat" />
   </options>
   <!-- Plugin storage -->
-  <storage />
+  <storage>
+    <entry key="air-descriptor"><![CDATA[EngineeringProject\application.xml]]></entry>
+  </storage>
 </project>

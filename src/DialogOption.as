@@ -18,10 +18,8 @@ package
 		
 		public function DialogOption(text:String, onClick:Function, ...args) 
 		{
-			//_id = availableOptions++;
 			_onClick = onClick;
 			_text = text;
-			//if(args.length > 0)
 			_args = args;
 		}
 		

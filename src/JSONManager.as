@@ -14,9 +14,9 @@ package
 	 */
 	public class JSONManager 
 	{
-		public static var isLoading:Boolean;
-		public static var destination:Object;
-		public static var onComplete:Function;
+		private static var isLoading:Boolean;
+		private static var destination:Object;
+		private static var onComplete:Function;
 		static private var loader:URLLoader;
 		static private var request:URLRequest;
 		
@@ -37,11 +37,11 @@ package
 			}
 		}
 		
-		public static function onLoadComplete(e:Event):void
+		private static function onLoadComplete(e:Event):void
 		{
-			
 			Content.json = JSON.parse(e.target.data);
 			onComplete();
+			//clear();
 		}
 		
 		public static function saveJSON(path:String, data:Object):void 
